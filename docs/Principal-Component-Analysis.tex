@@ -1,0 +1,192 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{book}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Principal Component Analysis},
+  pdfauthor={Dr.~H.G.J. van Mil   © 2021 Universiteit Leiden},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{amsthm}
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=8pt plus 2pt minus 4pt
+  \thm@postskip=\thm@preskip
+}
+\makeatother
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+
+\title{Principal Component Analysis}
+\author{Dr.~H.G.J. van Mil © 2021 Universiteit Leiden}
+\date{}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{introduction}{%
+\chapter*{Introduction}\label{introduction}}
+\addcontentsline{toc}{chapter}{Introduction}
+
+Principal component analysis (PCA) is a dimension reduction method, or \emph{unsupervised} machine learning method in modern statistical language. PCA is an exploratory method and needs to be contrasted with confirmatory methods (significance tests), and prediction methods (\emph{supervised} machine learning).
+
+Exploratory methods are used when there is no clear enough understanding of our system of interest to generate a meaningful hypothesis; a hypothesis for confirmatory statistics. One example is the measurement of many morphological or genetic features of different species within a genus. The dataset is then explored to identify those features that that can be used to classify or relate species to each other.
+
+Now imagine a spreadsheet with individual subjects as rows and features or properties as columns. An example could be a dataset where each row is an ID representing an individual, and each of 250 columns are the features measured on that individual. In the context of dimension reduction (PCA) this dataset contains 250 dimensions. It's clear that we cannot visualize 250 dimensions effectively in order to explore the dataset, and that is the problem PCA will tackle.
+
+As a dimension reduction method, PCA reduces the dimensions of the problem (250 in our example), to a two dimensional space that can be represent in a \((x, y)\) plot that we can investigate on paper (and also the flat computer screen). In doing so it tries to extract the maximal amount of information from the higher dimensional space and concentrate it in two dimensions. Information used to accomplish this takes the following statistical measures:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Variance}: If a variable (dimensions) varies a lot in you data, it means that its dimension have discriminating properties and caries information. The opposite, no variation, would mean that the property is shared by all individuals and no groups of individuals can be singled out, therefore this dimension would not carry any information.\\
+\item
+  \textbf{Correlation}: If variables (dimensions) vary, then they can correlate. If features are correlated, then we might expect that there is some morphological or functional relations and that feature therefore caries information.
+\end{itemize}
+
+We shall work out these ideas in the following screencasts. The fundamentals of PCA are however, based on linear algebra which is unfortunately outside the scoop of this course. Therefore we will take a more intuitive approach in the screencasts, using the concepts introduced in the previous two weeks, the aforementioned variance and correlations.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+PCA is also covered in \href{https://github.com/FransRodenburg/Biostatistics-Book-Series/blob/main/Elements_of_Biostatistics_Sep2020.pdf}{Elements of Biostatistics}, chapter 4.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+This online course is an excerpt of \href{https://fransrodenburg.github.io/General-Research-Skills/}{General Research Skills}.
+
+\hypertarget{motivation-behind-pca}{%
+\chapter{Motivation Behind PCA}\label{motivation-behind-pca}}
+
+This screencast explains the basic motivation behind dimensions reduction PCA. First the explanation behind the dimension reduction of a 3D object into 2D. It also addresses the meaning of the modern classification of PCA as an unsupervised machine learning methodology by comparing it with supervised machine learning.
+
+As an simple example the Iris data is used. This data set will we analyzed in more detail in another screencast.
+
+\begin{verbatim}
+## PhantomJS not found. You can install it with webshot::install_phantomjs(). If it is installed, please make sure the phantomjs executable can be found via the PATH variable.
+\end{verbatim}
+
+Questions:
+
+\begin{itemize}
+\tightlist
+\item
+  What is the difference between supervised and unsupervised machine learning methodologies.
+\end{itemize}
+
+\hypertarget{pca-fundamentals}{%
+\chapter{PCA Fundamentals}\label{pca-fundamentals}}
+
+PCA algorithm is solidly based on linear algebra. Without going in to detail we will use a concept and two measures from linear algebra:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Orthogonality}: Dimensions (variables) are independent of each other if they are Orthogonal; geometrically we would visualize that as perpendicular dimensions (axes).
+\item
+  \textbf{Eigenvectors}: The directions of these \textbf{orthogonal} axes, and thus the principal components, are given by the eigenvectors.
+\item
+  \textbf{Eigenvalues}: The length, or weights, of the eigenvectors are given by the eigenvalues. It turns out that the eigenvalues are directly related to the variance of the principle component.
+\end{itemize}
+
+PCA captures the most variance in the first new axes, the first principal component, by capturing most of the information (variance or eigenvalues). This is repeated for the next orthogonal principal component by capturing the most information (variance or eigenvalue) that is left after the previous step. These steps are repeated until we have the same number of principle components as dimensions.
+
+\begin{itemize}
+\tightlist
+\item
+  How we need to interpret the loading of a variables in a principal component?
+\end{itemize}
+
+\hypertarget{pca-in-classification}{%
+\chapter{PCA in classification}\label{pca-in-classification}}
+
+In this simple example the Iris data, introduced earlier, are analyzed using PCA. Note that normally we do not have the information on which species the individuals belong to, unsupervised. The species are only used here for a didactic purpose.
+
+Questions:
+
+\begin{itemize}
+\item
+  Which of the sepal or petal widths and lengths were important in the first, and which in the second principal component?
+\item
+  Which feature(s) (variable(s)) is response for the separation between Versicolor and Virginica?
+\end{itemize}
+
+\hypertarget{pca-and-gradients}{%
+\chapter{PCA and Gradients}\label{pca-and-gradients}}
+
+The Heptathlon dataset give the scores, for every athlete, for the different disciplines of the woman's Olympic Heptathlon of 1988 in Seoul. The row are the individual athletes and the columns the scores per discipline. This dataset might be interesting for the coaches to investigate if one of disciplines might contribute more to a success than another. Here we do not look in particular to clusters of groups of athletes but if the distribution of the individual athlete is related to the final score when visualizing the principal components.
+The relation with linear regression and supervised learning is also discussed.
+
+Question
+
+\begin{itemize}
+\tightlist
+\item
+  Explain in your own words which disciplines contributed to the success of Jackie Joyner-Kersee.
+\end{itemize}
+
+\end{document}

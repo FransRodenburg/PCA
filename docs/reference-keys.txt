@@ -1,0 +1,4 @@
+motivation-behind-pca
+pca-fundamentals
+pca-in-classification
+pca-and-gradients
